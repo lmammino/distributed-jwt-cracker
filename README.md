@@ -62,7 +62,7 @@ The following options are available:
 Example:
 
 ```bash
-jwt-cracker-client --host=localhost --port=9900 -pubPort=9901
+jwt-cracker-client --host=localhost --port=9900 --pubPort=9901
 ```
 
 
