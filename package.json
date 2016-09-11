@@ -1,0 +1,40 @@
+{
+  "name": "distributed-jwt-cracker",
+  "version": "0.0.1",
+  "description": "An experimental distributed JWT token cracker built using Node.js and ZeroMQ",
+  "bin": {
+    "jwt-cracker-server": "src/server.js",
+    "jwt-cracker-client": "src/client.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": {
+    "name": "Luciano Mammino",
+    "email": "lucianomammino@gmail.com",
+    "url": "http://loige.co"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=4"
+  },
+  "dependencies": {
+    "dateformat": "^1.0.12",
+    "indexed-string-variation": "^1.0.1",
+    "jsonwebtoken": "^7.1.9",
+    "winston": "^2.2.0",
+    "yargs": "^5.0.0",
+    "zmq": "^2.15.3"
+  },
+  "keywords": [
+    "jwt",
+    "token",
+    "cracker",
+    "brute force",
+    "password",
+    "brute force",
+    "HS256",
+    "secret",
+    "break"
+  ]
+}
