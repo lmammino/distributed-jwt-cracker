@@ -1,6 +1,6 @@
 {
   "name": "distributed-jwt-cracker",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "An experimental distributed JWT token cracker built using Node.js and ZeroMQ",
   "bin": {
     "jwt-cracker-server": "src/server.js",
