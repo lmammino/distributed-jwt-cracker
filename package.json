@@ -8,7 +8,8 @@
   },
   "preferGlobal": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node_modules/.bin/tap test/ --coverage | node_modules/.bin/tap-spec",
+    "posttest": "node_modules/.bin/tap --coverage-report=lcov && node_modules/.bin/codecov"
   },
   "author": {
     "name": "Luciano Mammino",
@@ -37,5 +38,11 @@
     "HS256",
     "secret",
     "break"
-  ]
+  ],
+  "devDependencies": {
+    "codecov": "^1.0.1",
+    "mockery": "^1.7.0",
+    "tap": "^7.1.2",
+    "tap-spec": "^4.1.1"
+  }
 }

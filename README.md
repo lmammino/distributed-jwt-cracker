@@ -5,6 +5,8 @@ It can be used to discover the password (or "secret") of an unencrypted JWT toke
 using a **HS256** signature.
 
 [![npm version](https://badge.fury.io/js/distributed-jwt-cracker.svg)](http://badge.fury.io/js/distributed-jwt-cracker)
+[![Build Status](https://travis-ci.org/lmammino/distributed-jwt-cracker.svg?branch=master)](https://travis-ci.org/lmammino/distributed-jwt-cracker)
+[![codecov.io](https://codecov.io/gh/lmammino/distributed-jwt-cracker/coverage.svg?branch=master)](https://codecov.io/gh/lmammino/distributed-jwt-cracker)
 
 
 ## Install
