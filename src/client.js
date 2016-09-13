@@ -3,10 +3,10 @@
 'use strict';
 
 const zmq = require('zmq');
-const generator = require('indexed-string-variation').generator;
 const yargs = require('yargs');
 const logger = require('./logger');
-const processBatch = require('./client/processBatch');
+const createDealer = require('./client/createDealer');
+const createSubscriber = require('./client/createSubscriber');
 
 const argv = yargs
   .usage('Usage: $0 [options]')
@@ -32,55 +32,13 @@ const host = argv.host;
 const port = argv.port;
 const pubPort = argv.pubPort;
 
-let getPwd;
-let id;
-let token;
-
 const batchSocket = zmq.socket('dealer');
 const subSocket = zmq.socket('sub');
+const dealer = createDealer(batchSocket, logger);
+const subscriber = createSubscriber(subSocket, batchSocket, logger);
 
-batchSocket.on('message', (rawMessage) => {
-  const msg = JSON.parse(rawMessage.toString());
-
-  switch(msg.type) {
-    case 'ping':
-      logger.info(`PING received`);
-      break;
-
-    case 'start':
-      id = msg.id;
-      getPwd = generator(msg.alphabet);
-      token = msg.token;
-      logger.info(`client attached, got id "${id}"`);
-    case 'batch':
-      logger.info(`received batch: ${msg.batch[0]}-${msg.batch[1]}`);
-      processBatch(token, getPwd, msg.batch, (pwd) => {
-        if (typeof pwd === 'undefined') {
-          // request next batch
-          logger.info(`password not found, requesting new batch`);
-          batchSocket.send(JSON.stringify({type:"next"}));
-        } else {
-          // propagate success
-          logger.info(`found password "${pwd}", exiting now`);
-          batchSocket.send(JSON.stringify({type:"success", password: pwd}));
-          process.exit(0);
-        }
-      });
-      break;
-
-    case 'default':
-      logger.error('invalid message received from server', rawMessage.toString());
-  }
-});
-
-subSocket.on('message', (topic, rawMessage) => {
-  if (topic.toString() === 'exit') {
-    logger.info(`received exit signal, ${rawMessage.toString()}`);
-    batchSocket.close();
-    subSocket.close();
-    process.exit(0);
-  }
-});
+batchSocket.on('message', dealer);
+subSocket.on('message', subscriber);
 
 batchSocket.connect(`tcp://${host}:${port}`);
 subSocket.connect(`tcp://${host}:${pubPort}`);

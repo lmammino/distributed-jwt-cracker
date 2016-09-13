@@ -22,6 +22,7 @@ const processBatch = (token, getPwd, batch, cb) => {
       try {
         jwt.verify(token, pwd, {ignoreExpiration: true, ignoreNotBefore: true});
         // finished, password found
+        rl.write(null, {ctrl: true, name: 'u'});
         rl.close();
         return cb(pwd, i);
       } catch (e) {}
