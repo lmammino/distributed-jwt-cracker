@@ -16,6 +16,7 @@ script:
 install:
   - npm install --dev
 before_install:
+  - "sudo apt-get install libzmq3-dev"
   - "npm update -g npm"
 after_success:
   - bash <(curl -s https://codecov.io/bash)
