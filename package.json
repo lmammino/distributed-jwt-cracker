@@ -1,11 +1,14 @@
 {
   "name": "distributed-jwt-cracker",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "An experimental distributed JWT token cracker built using Node.js and ZeroMQ",
   "bin": {
     "jwt-cracker-server": "src/server.js",
     "jwt-cracker-client": "src/client.js"
   },
+  "files": [
+    "src/"
+  ],
   "preferGlobal": true,
   "scripts": {
     "test": "node_modules/.bin/tap test/ --coverage | node_modules/.bin/tap-spec",
