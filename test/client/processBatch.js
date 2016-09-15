@@ -17,7 +17,7 @@ const testBatch = (t, batch, expectNotFound) => {
   const expectedPassword = !expectNotFound ? 'secret' : undefined;
   const expectedIndex = !expectNotFound ? 5975 : undefined;
 
-  const getPwd = generator(alphabet);
+  const variations = generator(alphabet);
 
   const onComplete = (password, index) => {
     t.equal(password, expectedPassword);
@@ -25,7 +25,7 @@ const testBatch = (t, batch, expectNotFound) => {
     t.end();
   }
 
-  processBatch(token, getPwd, batch, onComplete);
+  processBatch(token, variations, batch, onComplete);
 }
 
 test('it must return the secret in batch when found in a single chunk iteration', t => {

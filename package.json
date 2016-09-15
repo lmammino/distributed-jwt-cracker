@@ -45,6 +45,7 @@
   "devDependencies": {
     "codecov": "^1.0.1",
     "mockery": "^1.7.0",
+    "sinon": "^1.17.5",
     "tap": "^7.1.2",
     "tap-spec": "^4.1.1"
   }

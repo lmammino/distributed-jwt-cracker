@@ -3,7 +3,7 @@
 const jwt = require('jsonwebtoken');
 const readline = require('readline');
 
-const processBatch = (token, getPwd, batch, cb) => {
+const processBatch = (token, variations, batch, cb) => {
 
   const chunkSize = 1000;
   const rl = readline.createInterface({
@@ -15,10 +15,10 @@ const processBatch = (token, getPwd, batch, cb) => {
   const processChunk = (from, to) => {
     let pwd;
     let progress = Math.floor((from-batch[0])/(batch[1]-batch[0])*100);
-    rl.write(`>  ${progress}% (${getPwd(from)} - ${getPwd(to)})`);
+    rl.write(`>  ${progress}% (${variations(from)} - ${variations(to)})`);
 
     for (let i=from; i < to; i++) {
-      pwd = getPwd(i);
+      pwd = variations(i);
       try {
         jwt.verify(token, pwd, {ignoreExpiration: true, ignoreNotBefore: true});
         // finished, password found

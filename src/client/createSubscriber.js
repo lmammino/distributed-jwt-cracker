@@ -1,16 +1,20 @@
 'use strict';
 
-const createSubscriber = (subSocket, batchSocket, logger) => {
-  return (topic, rawMessage) => {
+const createSubscriber = (subSocket, batchSocket, exit, logger) => {
+  const subscriber = (topic, rawMessage) => {
     if (topic.toString() === 'exit') {
       if (logger) {
         logger.info(`received exit signal, ${rawMessage.toString()}`);
       }
       batchSocket.close();
       subSocket.close();
-      process.exit(0);
+      if (typeof exit === 'function') {
+        exit(0);
+      }
     }
   }
+
+  return subscriber;
 }
 
 module.exports = createSubscriber;
