@@ -11,36 +11,45 @@ const createDealer = (batchSocket, exit, logger) => {
   const dealer = rawMessage => {
     const msg = JSON.parse(rawMessage.toString());
 
+    const start = msg => {
+      id = msg.id;
+      variations = generator(msg.alphabet);
+      token = msg.token;
+      if (logger) {
+        logger.info(`client attached, got id "${id}"`);
+      }
+    };
+
+    const batch = msg => {
+      if (logger) {
+        logger.info(`received batch: ${msg.batch[0]}-${msg.batch[1]}`);
+      }
+      processBatch(token, variations, msg.batch, (pwd, index) => {
+        if (typeof pwd === 'undefined') {
+          // request next batch
+          if (logger) {
+            logger.info(`password not found, requesting new batch`);
+          }
+          batchSocket.send(JSON.stringify({type: 'next'}));
+        } else {
+          // propagate success
+          if (logger) {
+            logger.info(`found password "${pwd}" (index: ${index}), exiting now`);
+          }
+          batchSocket.send(JSON.stringify({type: 'success', password: pwd, index}));
+          exit(0);
+        }
+      });
+    };
+
     switch (msg.type) {
       case 'start':
-        id = msg.id;
-        variations = generator(msg.alphabet);
-        token = msg.token;
-        if (logger) {
-          logger.info(`client attached, got id "${id}"`);
-        }
+        start(msg);
+        batch(msg);
         break;
 
       case 'batch':
-        if (logger) {
-          logger.info(`received batch: ${msg.batch[0]}-${msg.batch[1]}`);
-        }
-        processBatch(token, variations, msg.batch, (pwd, index) => {
-          if (typeof pwd === 'undefined') {
-            // request next batch
-            if (logger) {
-              logger.info(`password not found, requesting new batch`);
-            }
-            batchSocket.send(JSON.stringify({type: 'next'}));
-          } else {
-            // propagate success
-            if (logger) {
-              logger.info(`found password "${pwd}" (index: ${index}), exiting now`);
-            }
-            batchSocket.send(JSON.stringify({type: 'success', password: pwd, index}));
-            exit(0);
-          }
-        });
+        batch(msg);
         break;
 
       default:

@@ -6,6 +6,7 @@ const zmq = require('zmq');
 const isv = require('indexed-string-variation');
 const yargs = require('yargs');
 const jwt = require('jsonwebtoken');
+const bigInt = require('big-integer');
 const logger = require('./logger');
 
 const argv = yargs
@@ -53,15 +54,17 @@ const token = argv._[0];
 const port = argv.port;
 const pubPort = argv.pubPort;
 const alphabet = argv.alphabet;
-const batchSize = argv.batchSize;
+const batchSize = bigInt(String(argv.batchSize));
 const start = argv.start;
 
-let cursor = start;
+let cursor = bigInt(String(start));
 const clients = new Map();
 
 const assignNextBatch = client => {
-  const batch = [cursor, cursor + batchSize - 1];
-  cursor += batchSize;
+  const from = cursor;
+  const to = cursor.add(batchSize).minus(bigInt.one);
+  const batch = [from.toString(), to.toString()];
+  cursor = cursor.add(batchSize);
   client.currentBatch = batch;
   client.currentBatchStartedAt = new Date();
 

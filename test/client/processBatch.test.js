@@ -11,7 +11,7 @@ const testBatch = (t, batch, expectNotFound) => {
   const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ';
   const alphabet = 'scret';
   const expectedPassword = expectNotFound ? undefined : 'secret';
-  const expectedIndex = expectNotFound ? undefined : 5975;
+  const expectedIndex = expectNotFound ? undefined : '5975';
 
   const variations = generator(alphabet);
 
@@ -25,13 +25,13 @@ const testBatch = (t, batch, expectNotFound) => {
 };
 
 test('it must return the secret in batch when found in a single chunk iteration', t => {
-  testBatch(t, [5950, 6000]);
+  testBatch(t, ['5950', '6000']);
 });
 
 test('it must return the secret in batch when found after multiple iterations', t => {
-  testBatch(t, [2950, 6000]);
+  testBatch(t, ['2950', '6000']);
 });
 
 test('it must return undefined when password is not found in batch', t => {
-  testBatch(t, [6000, 8000], true);
+  testBatch(t, ['6000', '8000'], true);
 });

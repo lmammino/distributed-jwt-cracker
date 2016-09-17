@@ -6,12 +6,19 @@ const mockRequire = require('mock-require');
 const createProcessBatchMock = require('../mocks/createProcessBatchMock');
 const createDealer = require('../../src/client/createDealer');
 
-test('it should store parameters on start request', t => {
-  t.plan(4);
+test('it should store parameters on start request and process the first batch', t => {
+  t.plan(5);
 
-  const batchSocket = sinon.stub();
+  const batchSocket = {send: sinon.spy()};
   const exit = sinon.stub();
   const logger = {info: sinon.spy()};
+  const verifyExpectations = () => {
+    t.ok(batchSocket.send.calledWith(JSON.stringify({type: 'next'})), 'Sent next batch request');
+    t.end();
+  };
+  const processBatch = createProcessBatchMock(undefined, undefined, verifyExpectations);
+  mockRequire('../../src/client/processBatch', processBatch);
+  const createDealer = mockRequire.reRequire('../../src/client/createDealer');
   const dealer = createDealer(batchSocket, exit, logger);
 
   const id = 'someId';
@@ -19,7 +26,8 @@ test('it should store parameters on start request', t => {
   const rawMessage = new Buffer(JSON.stringify({
     type: 'start',
     id,
-    token
+    token,
+    batch: ['0', '100']
   }));
   dealer(rawMessage);
 
@@ -46,7 +54,7 @@ test('it should request another batch after unsuccessful search', t => {
 
   const rawMessage = new Buffer(JSON.stringify({
     type: 'batch',
-    batch: [1234, 4567]
+    batch: ['1234', '4567']
   }));
   dealer(rawMessage);
 });
@@ -71,7 +79,7 @@ test('it should send success and exit after successful search', t => {
 
   const rawMessage = new Buffer(JSON.stringify({
     type: 'batch',
-    batch: [1234, 4567]
+    batch: ['1234', '4567']
   }));
   dealer(rawMessage);
 });
