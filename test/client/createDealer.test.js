@@ -16,7 +16,7 @@ test('it should store parameters on start request', t => {
 
   const id = 'someId';
   const token = 'some.JWT.Token';
-  const rawMessage = Buffer(JSON.stringify({
+  const rawMessage = new Buffer(JSON.stringify({
     type: 'start',
     id,
     token
@@ -36,7 +36,7 @@ test('it should request another batch after unsuccessful search', t => {
   const exit = sinon.stub();
   const logger = {info: sinon.spy()};
   const verifyExpectations = () => {
-    t.ok(batchSocket.send.calledWith(JSON.stringify({type:"next"})), 'Sent next batch request');
+    t.ok(batchSocket.send.calledWith(JSON.stringify({type: 'next'})), 'Sent next batch request');
     t.end();
   };
   const processBatch = createProcessBatchMock(undefined, undefined, verifyExpectations);
@@ -44,7 +44,7 @@ test('it should request another batch after unsuccessful search', t => {
   const createDealer = mockRequire.reRequire('../../src/client/createDealer');
   const dealer = createDealer(batchSocket, exit, logger);
 
-  const rawMessage = Buffer(JSON.stringify({
+  const rawMessage = new Buffer(JSON.stringify({
     type: 'batch',
     batch: [1234, 4567]
   }));
@@ -60,7 +60,7 @@ test('it should send success and exit after successful search', t => {
   const exit = sinon.spy();
   const logger = {info: sinon.spy()};
   const verifyExpectations = () => {
-    t.ok(batchSocket.send.calledWith(JSON.stringify({type:"success", password: pwd, index})), 'Sent password');
+    t.ok(batchSocket.send.calledWith(JSON.stringify({type: 'success', password: pwd, index})), 'Sent password');
     t.ok(exit.calledWith(0));
     t.end();
   };
@@ -69,7 +69,7 @@ test('it should send success and exit after successful search', t => {
   const createDealer = mockRequire.reRequire('../../src/client/createDealer');
   const dealer = createDealer(batchSocket, exit, logger);
 
-  const rawMessage = Buffer(JSON.stringify({
+  const rawMessage = new Buffer(JSON.stringify({
     type: 'batch',
     batch: [1234, 4567]
   }));
@@ -84,7 +84,7 @@ test('it should log errors in case of incomprehensible message', t => {
   const logger = {error: sinon.spy()};
   const dealer = createDealer(batchSocket, exit, logger);
 
-  const rawMessage = Buffer(JSON.stringify({type: 'something'}));
+  const rawMessage = new Buffer(JSON.stringify({type: 'something'}));
   dealer(rawMessage);
 
   t.ok(logger.error.calledWith('invalid message received from server', '{"type":"something"}'), 'error info logged');

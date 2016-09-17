@@ -3,8 +3,8 @@
 module.exports = {
   createInterface: () => {
     return {
-      'write': () => {},
-      'close': () => {}
-    }
+      write: () => {},
+      close: () => {}
+    };
   }
 };

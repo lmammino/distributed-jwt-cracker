@@ -10,8 +10,8 @@ const processBatch = require('../../src/client/processBatch');
 const testBatch = (t, batch, expectNotFound) => {
   const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ';
   const alphabet = 'scret';
-  const expectedPassword = !expectNotFound ? 'secret' : undefined;
-  const expectedIndex = !expectNotFound ? 5975 : undefined;
+  const expectedPassword = expectNotFound ? undefined : 'secret';
+  const expectedIndex = expectNotFound ? undefined : 5975;
 
   const variations = generator(alphabet);
 

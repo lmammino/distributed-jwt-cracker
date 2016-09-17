@@ -11,7 +11,7 @@
   ],
   "preferGlobal": true,
   "scripts": {
-    "lint": "./node_modules/.bin/eslint src/",
+    "lint": "./node_modules/.bin/eslint src/ test/",
     "test": "npm run lint && node_modules/.bin/tap test/**/*.test.js --coverage | node_modules/.bin/tap-spec",
     "posttest": "node_modules/.bin/tap --coverage-report=lcov && node_modules/.bin/codecov"
   },
