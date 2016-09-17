@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 const readline = require('readline');
 
 const processBatch = (token, variations, batch, cb) => {
-
   const chunkSize = 1000;
   const rl = readline.createInterface({
     input: process.stdin,
@@ -14,10 +13,10 @@ const processBatch = (token, variations, batch, cb) => {
 
   const processChunk = (from, to) => {
     let pwd;
-    let progress = Math.floor((from-batch[0])/(batch[1]-batch[0])*100);
+    const progress = Math.floor((from - batch[0]) / (batch[1] - batch[0]) * 100);
     rl.write(`>  ${progress}% (${variations(from)} - ${variations(to)})`);
 
-    for (let i=from; i < to; i++) {
+    for (let i = from; i < to; i++) {
       pwd = variations(i);
       try {
         jwt.verify(token, pwd, {ignoreExpiration: true, ignoreNotBefore: true});
@@ -32,7 +31,6 @@ const processBatch = (token, variations, batch, cb) => {
     from = to;
     to = Math.min(batch[1], from + chunkSize);
 
-    //readline.clearLine(process.stdout, 0);
     rl.write(null, {ctrl: true, name: 'u'});
     if (from === to) {
       // finished, password not found
@@ -42,9 +40,9 @@ const processBatch = (token, variations, batch, cb) => {
 
     // process next chunk
     setImmediate(() => processChunk(from, to));
-  }
+  };
 
   setImmediate(() => processChunk(batch[0], Math.min(batch[1], batch[0] + chunkSize)));
-}
+};
 
 module.exports = processBatch;

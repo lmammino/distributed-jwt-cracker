@@ -1,14 +1,10 @@
 'use strict';
 
 const test = require('tap').test;
-const mockery = require('mockery');
+const mockRequire = require('mock-require');
 const generator = require('indexed-string-variation').generator;
-mockery.enable({
-  warnOnReplace: false,
-  warnOnUnregistered: false
-});
 
-mockery.registerMock('readline', require('../mocks/readline'));
+mockRequire('readline', require('../mocks/readline'));
 const processBatch = require('../../src/client/processBatch');
 
 const testBatch = (t, batch, expectNotFound) => {
@@ -23,10 +19,10 @@ const testBatch = (t, batch, expectNotFound) => {
     t.equal(password, expectedPassword);
     t.equal(index, expectedIndex);
     t.end();
-  }
+  };
 
   processBatch(token, variations, batch, onComplete);
-}
+};
 
 test('it must return the secret in batch when found in a single chunk iteration', t => {
   testBatch(t, [5950, 6000]);

@@ -3,16 +3,15 @@
 const processBatch = require('./processBatch');
 const generator = require('indexed-string-variation').generator;
 
-const createDealer = (batchSocket, logger) => {
-
+const createDealer = (batchSocket, exit, logger) => {
   let id;
   let variations;
   let token;
 
-  const dealer = (rawMessage) => {
+  const dealer = rawMessage => {
     const msg = JSON.parse(rawMessage.toString());
 
-    switch(msg.type) {
+    switch (msg.type) {
       case 'start':
         id = msg.id;
         variations = generator(msg.alphabet);
@@ -32,30 +31,30 @@ const createDealer = (batchSocket, logger) => {
             if (logger) {
               logger.info(`password not found, requesting new batch`);
             }
-            batchSocket.send(JSON.stringify({type:"next"}));
+            batchSocket.send(JSON.stringify({type: 'next'}));
           } else {
             // propagate success
             if (logger) {
               logger.info(`found password "${pwd}" (index: ${index}), exiting now`);
             }
-            batchSocket.send(JSON.stringify({type:"success", password: pwd, index}));
-            process.exit(0);
+            batchSocket.send(JSON.stringify({type: 'success', password: pwd, index}));
+            exit(0);
           }
         });
         break;
 
-      case 'default':
+      default:
         if (logger) {
           logger.error('invalid message received from server', rawMessage.toString());
         }
     }
-  }
+  };
 
   dealer.getId = () => id;
   dealer.getToken = () => token;
   dealer.getVariations = () => variations;
 
   return dealer;
-}
+};
 
 module.exports = createDealer;

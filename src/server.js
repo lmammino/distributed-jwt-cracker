@@ -32,20 +32,16 @@ const argv = yargs
   .alias('s', 'start')
   .describe('start', 'The index from where to start the search')
   .default('start', 0)
-  .number('maxLength')
-  .default('maxLength', undefined)
-  .alias('m', 'maxLength')
-  .describe('maxLength', 'The maximum length for the generated passwords')
   .help()
   .version()
-  .check((args, opts) => {
-    const token = jwt.decode(args._[0], {complete:true});
+  .check(args => {
+    const token = jwt.decode(args._[0], {complete: true});
     if (!token) {
-      throw "Invalid JWT token: cannot decode token";
+      throw new Error('Invalid JWT token: cannot decode token');
     }
 
     if (!(token.header.alg === 'HS256' && token.header.typ === 'JWT')) {
-      throw "Invalid JWT token: only HS256 JWT tokens supported";
+      throw new Error('Invalid JWT token: only HS256 JWT tokens supported');
     }
 
     return true;
@@ -58,28 +54,28 @@ const port = argv.port;
 const pubPort = argv.pubPort;
 const alphabet = argv.alphabet;
 const batchSize = argv.batchSize;
-const maxLength = argv.maxLength;
 const start = argv.start;
 
 let cursor = start;
 const clients = new Map();
 
-const addClient = (channel) => {
-  const id = channel.toString('hex');
-  const client = {id, channel, joinedAt: new Date()}
-  assignNextBatch(client);
-  clients.set(id, client);
-
-  return client;
-}
-
-const assignNextBatch = (client) => {
+const assignNextBatch = client => {
   const batch = [cursor, cursor + batchSize - 1];
   cursor += batchSize;
   client.currentBatch = batch;
   client.currentBatchStartedAt = new Date();
+
   return batch;
-}
+};
+
+const addClient = channel => {
+  const id = channel.toString('hex');
+  const client = {id, channel, joinedAt: new Date()};
+  assignNextBatch(client);
+  clients.set(id, client);
+
+  return client;
+};
 
 const batchSocket = zmq.socket('router');
 const signalSocket = zmq.socket('pub');
@@ -88,7 +84,7 @@ batchSocket.on('message', (channel, rawMessage) => {
   const msg = JSON.parse(rawMessage.toString());
 
   switch (msg.type) {
-    case 'join':
+    case 'join': {
       const client = addClient(channel);
       const response = {
         type: 'start',
@@ -100,14 +96,14 @@ batchSocket.on('message', (channel, rawMessage) => {
       batchSocket.send([channel, JSON.stringify(response)]);
       logger.info(`${client.id} joined (batch: ${client.currentBatch[0]}-${client.currentBatch[1]})`);
       break;
-
-    case 'next':
+    }
+    case 'next': {
       const batch = assignNextBatch(clients.get(channel.toString('hex')));
       logger.info(`client ${channel.toString('hex')} requested new batch, sending ${batch[0]}-${batch[1]}`);
       batchSocket.send([channel, JSON.stringify({type: 'batch', batch})]);
       break;
-
-    case 'success':
+    }
+    case 'success': {
       const pwd = msg.password;
       logger.info(`client ${channel.toString('hex')} found password "${pwd}"`);
       // publish exit signal
@@ -119,11 +115,10 @@ batchSocket.on('message', (channel, rawMessage) => {
         process.exit(0);
       }, 5000);
       break;
-
+    }
     default:
       logger.error('invalid message received from channel', channel.toString('hex'), rawMessage.toString());
   }
-
 });
 
 batchSocket.bindSync(`tcp://*:${port}`);

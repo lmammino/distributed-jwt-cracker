@@ -1,6 +1,6 @@
 {
   "name": "distributed-jwt-cracker",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "An experimental distributed JWT token cracker built using Node.js and ZeroMQ",
   "bin": {
     "jwt-cracker-server": "src/server.js",
@@ -11,7 +11,8 @@
   ],
   "preferGlobal": true,
   "scripts": {
-    "test": "node_modules/.bin/tap test/ --coverage | node_modules/.bin/tap-spec",
+    "lint": "./node_modules/.bin/eslint src/",
+    "test": "npm run lint && node_modules/.bin/tap test/**/*.test.js --coverage | node_modules/.bin/tap-spec",
     "posttest": "node_modules/.bin/tap --coverage-report=lcov && node_modules/.bin/codecov"
   },
   "author": {
@@ -43,10 +44,17 @@
     "break"
   ],
   "devDependencies": {
+    "babel-eslint": "^6.1.2",
     "codecov": "^1.0.1",
-    "mockery": "^1.7.0",
+    "eslint": "^3.5.0",
+    "eslint-config-xo-space": "^0.14.0",
+    "eslint-plugin-babel": "^3.3.0",
+    "mock-require": "^1.3.0",
     "sinon": "^1.17.5",
     "tap": "^7.1.2",
     "tap-spec": "^4.1.1"
+  },
+  "eslintConfig": {
+    "extends": "xo-space/esnext"
   }
 }

@@ -12,9 +12,9 @@ const createSubscriber = (subSocket, batchSocket, exit, logger) => {
         exit(0);
       }
     }
-  }
+  };
 
   return subscriber;
-}
+};
 
 module.exports = createSubscriber;

@@ -37,7 +37,6 @@ The following options are available:
 | -a, --alphabet | The alphabet used to generate the passwords | string | "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789" |
 | -b, --batchSize | The number of attempts assigned to every client in a batch | number | 1000000 |
 | -s, --start | The index from where to start the search | number | 0 |
-| -m, --maxLength | The maximum length for the generated passwords | number | undefined |
 
 Example, using the example [JWT.io](https://jwt.io) token over a simple alphabet:
 

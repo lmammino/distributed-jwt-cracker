@@ -34,7 +34,7 @@ const pubPort = argv.pubPort;
 
 const batchSocket = zmq.socket('dealer');
 const subSocket = zmq.socket('sub');
-const dealer = createDealer(batchSocket, logger);
+const dealer = createDealer(batchSocket, process.exit, logger);
 const subscriber = createSubscriber(subSocket, batchSocket, process.exit, logger);
 
 batchSocket.on('message', dealer);
@@ -43,4 +43,4 @@ subSocket.on('message', subscriber);
 batchSocket.connect(`tcp://${host}:${port}`);
 subSocket.connect(`tcp://${host}:${pubPort}`);
 subSocket.subscribe('exit');
-batchSocket.send(JSON.stringify({"type":"join"}));
+batchSocket.send(JSON.stringify({type: 'join'}));
