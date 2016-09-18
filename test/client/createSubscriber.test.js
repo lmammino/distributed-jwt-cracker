@@ -17,5 +17,5 @@ test('it should close sockets and exits on exit message', t => {
   t.ok(subSocket.close.called, 'subscriber socket closed');
   t.ok(batchSocket.close.called, 'batch socket closed');
   t.ok(logger.info.called, 'message logged');
-  t.ok(exit.called, 'exited');
+  t.ok(exit.calledWith(0), 'exited with success');
 });

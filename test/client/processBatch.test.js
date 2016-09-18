@@ -16,8 +16,8 @@ const testBatch = (t, batch, expectNotFound) => {
   const variations = generator(alphabet);
 
   const onComplete = (password, index) => {
-    t.equal(password, expectedPassword);
-    t.equal(index, expectedIndex);
+    t.equal(password, expectedPassword, 'returned correct password');
+    t.equal(index, expectedIndex, 'returned correct index');
     t.end();
   };
 

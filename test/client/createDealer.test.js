@@ -69,7 +69,7 @@ test('it should send success and exit after successful search', t => {
   const logger = {info: sinon.spy()};
   const verifyExpectations = () => {
     t.ok(batchSocket.send.calledWith(JSON.stringify({type: 'success', password: pwd, index})), 'Sent password');
-    t.ok(exit.calledWith(0));
+    t.ok(exit.calledWith(0), 'exited with success');
     t.end();
   };
   const processBatch = createProcessBatchMock(pwd, index, verifyExpectations);

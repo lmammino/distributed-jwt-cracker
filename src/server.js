@@ -7,6 +7,7 @@ const isv = require('indexed-string-variation');
 const yargs = require('yargs');
 const jwt = require('jsonwebtoken');
 const bigInt = require('big-integer');
+const createRouter = require('./server/createRouter');
 const logger = require('./logger');
 
 const argv = yargs
@@ -56,73 +57,20 @@ const pubPort = argv.pubPort;
 const alphabet = argv.alphabet;
 const batchSize = bigInt(String(argv.batchSize));
 const start = argv.start;
-
-let cursor = bigInt(String(start));
-const clients = new Map();
-
-const assignNextBatch = client => {
-  const from = cursor;
-  const to = cursor.add(batchSize).minus(bigInt.one);
-  const batch = [from.toString(), to.toString()];
-  cursor = cursor.add(batchSize);
-  client.currentBatch = batch;
-  client.currentBatchStartedAt = new Date();
-
-  return batch;
-};
-
-const addClient = channel => {
-  const id = channel.toString('hex');
-  const client = {id, channel, joinedAt: new Date()};
-  assignNextBatch(client);
-  clients.set(id, client);
-
-  return client;
-};
-
 const batchSocket = zmq.socket('router');
 const signalSocket = zmq.socket('pub');
+const router = createRouter(
+  batchSocket,
+  signalSocket,
+  token,
+  alphabet,
+  batchSize,
+  start,
+  logger,
+  process.exit
+);
 
-batchSocket.on('message', (channel, rawMessage) => {
-  const msg = JSON.parse(rawMessage.toString());
-
-  switch (msg.type) {
-    case 'join': {
-      const client = addClient(channel);
-      const response = {
-        type: 'start',
-        id: client.id,
-        batch: client.currentBatch,
-        alphabet,
-        token
-      };
-      batchSocket.send([channel, JSON.stringify(response)]);
-      logger.info(`${client.id} joined (batch: ${client.currentBatch[0]}-${client.currentBatch[1]})`);
-      break;
-    }
-    case 'next': {
-      const batch = assignNextBatch(clients.get(channel.toString('hex')));
-      logger.info(`client ${channel.toString('hex')} requested new batch, sending ${batch[0]}-${batch[1]}`);
-      batchSocket.send([channel, JSON.stringify({type: 'batch', batch})]);
-      break;
-    }
-    case 'success': {
-      const pwd = msg.password;
-      logger.info(`client ${channel.toString('hex')} found password "${pwd}"`);
-      // publish exit signal
-      signalSocket.send(['exit', `password "${pwd}" found by client ${channel.toString('hex')}`]);
-      // close the main process after 5 sec (take time to propagate the exit signal);
-      setTimeout(() => {
-        batchSocket.close();
-        signalSocket.close();
-        process.exit(0);
-      }, 5000);
-      break;
-    }
-    default:
-      logger.error('invalid message received from channel', channel.toString('hex'), rawMessage.toString());
-  }
-});
+batchSocket.on('message', router);
 
 batchSocket.bindSync(`tcp://*:${port}`);
 signalSocket.bindSync(`tcp://*:${pubPort}`);
