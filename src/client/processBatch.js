@@ -39,7 +39,7 @@ const processBatch = (token, variations, batch, cb) => {
     if (from === to) {
       // finished, password not found
       rl.close();
-      return cb(undefined);
+      return cb();
     }
 
     // process next chunk
