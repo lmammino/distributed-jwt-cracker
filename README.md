@@ -67,6 +67,16 @@ jwt-cracker-client --host=localhost --port=9900 --pubPort=9901
 ```
 
 
+## The making of
+
+This project has been thoroughly discussed in two articles published on RisingStack community blog:
+ 
+ - [ZeroMQ & Node.js Tutorial - Cracking JWT Tokens (Part 1.)](https://community.risingstack.com/zeromq-node-js-cracking-jwt-tokens-1/)
+ - [ZeroMQ & Node.js Tutorial - Cracking JWT Tokens (Part 2.)](https://community.risingstack.com/zeromq-node-js-cracking-jwt-tokens-part2/)
+ 
+[![ZeroMQ & Node.js Tutorial - Cracking JWT Tokens](https://blog-assets.risingstack.com/community/luciano/zeromq-nodejs-tutorial-cracking-jwt-tokens.png)](https://community.risingstack.com/zeromq-node-js-cracking-jwt-tokens-1/)
+
+
 ## Contributing
 
 Everyone is very welcome to contribute to this project.
