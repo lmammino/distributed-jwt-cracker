@@ -32,7 +32,7 @@
     "big-integer": "^1.6.16",
     "dateformat": "^1.0.12",
     "indexed-string-variation": "^1.0.2",
-    "jsonwebtoken": "^7.1.9",
+    "jsonwebtoken": "^8.0.0",
     "winston": "^2.2.0",
     "yargs": "^5.0.0",
     "zmq": "^2.15.3"
