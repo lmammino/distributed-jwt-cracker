@@ -25,7 +25,7 @@ const processBatch = (token, variations, batch, cb) => {
       try {
         jwt.verify(token, pwd, {ignoreExpiration: true, ignoreNotBefore: true});
         // finished, password found
-        rl.write(null, {ctrl: true, name: 'u'});
+        rl.write('', {ctrl: true, name: 'u'});
         rl.close();
         return cb(pwd, i.toString());
       } catch (e) {}
@@ -35,7 +35,7 @@ const processBatch = (token, variations, batch, cb) => {
     from = to;
     to = bigInt.min(batchEnd, from.add(chunkSize));
 
-    rl.write(null, {ctrl: true, name: 'u'});
+    rl.write('', {ctrl: true, name: 'u'});
     if (from === to) {
       // finished, password not found
       rl.close();
