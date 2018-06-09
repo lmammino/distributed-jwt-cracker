@@ -19,7 +19,5 @@ script:
   - npm test
 install:
   - npm install --dev
-before_install:
-  - "npm update -g npm"
 after_success:
   - bash <(curl -s https://codecov.io/bash)
