@@ -4,9 +4,13 @@ An experimental distributed JWT token cracker built using Node.js and ZeroMQ.
 It can be used to discover the password (or "secret") of an unencrypted JWT token
 using a **HS256** signature.
 
+[![npm download](https://img.shields.io/npm/dt/distributed-jwt-cracker.svg)](https://www.npmjs.com/package/distributed-jwt-cracker)
 [![npm version](https://badge.fury.io/js/distributed-jwt-cracker.svg)](http://badge.fury.io/js/distributed-jwt-cracker)
 [![Build Status](https://travis-ci.org/lmammino/distributed-jwt-cracker.svg?branch=master)](https://travis-ci.org/lmammino/distributed-jwt-cracker)
 [![codecov.io](https://codecov.io/gh/lmammino/distributed-jwt-cracker/coverage.svg?branch=master)](https://codecov.io/gh/lmammino/distributed-jwt-cracker)
+ [![Rawsec's CyberSecurity Inventory](https://inventory.rawsec.ml/img/badges/Rawsec-inventoried-FF5050_flat.svg)](https://inventory.rawsec.ml/tools.html#distributed-jwt-cracker)
+  [![GitHub stars](https://img.shields.io/github/stars/lmammino/distributed-jwt-cracker.svg)](https://github.com/lmammino/distributed-jwt-cracker/stargazers)
+ [![GitHub license](https://img.shields.io/github/license/lmammino/distributed-jwt-cracker.svg)](https://github.com/lmammino/distributed-jwt-cracker/blob/master/LICENSE)
 
 
 ## Install
