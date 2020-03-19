@@ -35,7 +35,7 @@
     "indexed-string-variation": "^1.0.2",
     "jsonwebtoken": "^8.2.2",
     "winston": "^2.2.0",
-    "yargs": "^5.0.0",
+    "yargs": "^13.1.0",
     "zmq": "^2.15.3"
   },
   "keywords": [
