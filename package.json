@@ -31,7 +31,7 @@
   "engineStrict": true,
   "dependencies": {
     "big-integer": "^1.6.16",
-    "dateformat": "^1.0.12",
+    "dateformat": "^2.0.0",
     "indexed-string-variation": "^1.0.2",
     "jsonwebtoken": "^8.2.2",
     "winston": "^2.2.0",
